@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="dark">
+<head>
+<!-- Static export for GitHub Pages (https://entropi-hub.github.io/entropi/): every asset path is relative; only canonical, og:url and the share image (og:image, twitter:image) are absolute. -->
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name='robots' content='max-image-preview:large' />
+<script>
+document.documentElement.classList.add('js');
+</script>
+<title>Entropi | Selangkah di depan awan. MPC-901 untuk PLTG + PLTS</title>
+<meta name="description" content="MPC-901 membaca prakiraan cuaca dan beban 24 jam, lalu mengirim setpoint ke governor/DCS yang ada. PLTG yang berpasangan dengan PLTS jadi lebih stabil. Tanpa hardware baru, fail-safe ke PID.">
+<meta name="theme-color" content="#0a1120">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://entropi-hub.github.io/entropi/">
+<link rel="canonical" href="https://entropi-hub.github.io/entropi/">
+<meta property="og:site_name" content="Entropi">
+<meta property="og:locale" content="id_ID">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="Entropi | Selangkah di depan awan.">
+<meta property="og:description" content="Kontrol prediktif MPC-901 untuk PLTG yang berpasangan dengan PLTS. Membaca langit, lalu menyiapkan turbin. Tanpa hardware baru.">
+<meta property="og:image" content="https://entropi-hub.github.io/entropi/wp-content/themes/entropi/assets/media/entropi-video-poster.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="720">
+<meta property="og:image:alt" content="Logo Entropi di atas latar gelap dengan tagline Nature prefers chaos. We prefer control.">
+<meta property="og:image:type" content="image/jpeg">
+<meta name="twitter:image:alt" content="Logo Entropi di atas latar gelap dengan tagline Nature prefers chaos. We prefer control.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Entropi | Selangkah di depan awan.">
+<meta name="twitter:description" content="Kontrol prediktif MPC-901 untuk PLTG yang berpasangan dengan PLTS. Membaca langit, lalu menyiapkan turbin. Tanpa hardware baru.">
+<meta name="twitter:image" content="https://entropi-hub.github.io/entropi/wp-content/themes/entropi/assets/media/entropi-video-poster.jpg">
+	<link rel="icon" href="wp-content/themes/entropi/assets/media/entropi-flame-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="wp-content/themes/entropi/assets/media/entropi-flame-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="wp-content/themes/entropi/assets/media/entropi-flame-180.png" sizes="180x180">
+	<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+
+</style>
+<style id="wp-block-paragraph-inline-css">
+.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
+
+</style>
+<style id="wp-block-image-inline-css">
+.wp-block-image>a,.wp-block-image>figure>a{display:inline-block}.wp-block-image img{box-sizing:border-box;height:auto;max-width:100%;vertical-align:bottom}@media not (prefers-reduced-motion){.wp-block-image img.hide{visibility:hidden}.wp-block-image img.show{animation:show-content-image .4s}}.wp-block-image[style*=border-radius] img,.wp-block-image[style*=border-radius]>a{border-radius:inherit}.wp-block-image.has-custom-border img{box-sizing:border-box}.wp-block-image.aligncenter{text-align:center}.wp-block-image.alignfull>a,.wp-block-image.alignwide>a{width:100%}.wp-block-image.alignfull img,.wp-block-image.alignwide img{height:auto;width:100%}.wp-block-image .aligncenter,.wp-block-image .alignleft,.wp-block-image .alignright,.wp-block-image.aligncenter,.wp-block-image.alignleft,.wp-block-image.alignright{display:table}.wp-block-image .aligncenter>figcaption,.wp-block-image .alignleft>figcaption,.wp-block-image .alignright>figcaption,.wp-block-image.aligncenter>figcaption,.wp-block-image.alignleft>figcaption,.wp-block-image.alignright>figcaption{caption-side:bottom;display:table-caption}.wp-block-image .alignleft{float:left;margin:.5em 1em .5em 0}.wp-block-image .alignright{float:right;margin:.5em 0 .5em 1em}.wp-block-image .aligncenter{margin-left:auto;margin-right:auto}.wp-block-image :where(figcaption){margin-bottom:1em;margin-top:.5em}.wp-block-image.is-style-circle-mask img{border-radius:9999px}@supports ((-webkit-mask-image:none) or (mask-image:none)) or (-webkit-mask-image:none){.wp-block-image.is-style-circle-mask img{border-radius:0;-webkit-mask-image:url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"/></svg>');mask-image:url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"/></svg>');mask-mode:alpha;-webkit-mask-position:center;mask-position:center;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:contain;mask-size:contain}}:root :where(.wp-block-image.is-style-rounded img,.wp-block-image .is-style-rounded img){border-radius:9999px}.wp-block-image figure{margin:0}.wp-lightbox-container{display:flex;flex-direction:column;position:relative}.wp-lightbox-container img{cursor:zoom-in}.wp-lightbox-container img:hover+button{opacity:1}.wp-lightbox-container button{align-items:center;backdrop-filter:blur(16px) saturate(180%);background-color:rgba(90,90,90,.25);border:none;border-radius:4px;cursor:zoom-in;display:flex;height:20px;justify-content:center;opacity:0;padding:0;position:absolute;right:16px;text-align:center;top:16px;width:20px;z-index:100}@media not (prefers-reduced-motion){.wp-lightbox-container button{transition:opacity .2s ease}}.wp-lightbox-container button:focus-visible{outline:3px auto rgba(90,90,90,.25);outline:3px auto -webkit-focus-ring-color;outline-offset:3px}.wp-lightbox-container button:hover{cursor:pointer;opacity:1}.wp-lightbox-container button:focus{opacity:1}.wp-lightbox-container button:focus,.wp-lightbox-container button:hover,.wp-lightbox-container button:not(:hover):not(:active):not(.has-background){background-color:rgba(90,90,90,.25);border:none}.wp-lightbox-overlay{box-sizing:border-box;cursor:zoom-out;height:100vh;left:0;overflow:hidden;position:fixed;top:0;visibility:hidden;width:100%;z-index:100000}.wp-lightbox-overlay .wp-lightbox-close-button{align-items:center;cursor:pointer;display:flex;font-family:inherit;gap:8px;justify-content:center;line-height:1;min-height:40px;min-width:40px;padding:0 4px;position:absolute;right:calc(env(safe-area-inset-right) + 16px);top:calc(env(safe-area-inset-top) + 16px);z-index:5000000}.wp-lightbox-overlay .wp-lightbox-close-button:focus,.wp-lightbox-overlay .wp-lightbox-close-button:hover,.wp-lightbox-overlay .wp-lightbox-close-button:not(:hover):not(:active):not(.has-background){background:none;border:none}.wp-lightbox-overlay .wp-lightbox-close-button:has(.wp-lightbox-close-text:not([hidden])) .wp-lightbox-close-icon svg{height:1em;width:1em}.wp-lightbox-overlay .wp-lightbox-close-icon svg{display:block}.wp-lightbox-overlay .wp-lightbox-navigation-button-next,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{align-items:center;bottom:16px;cursor:pointer;display:flex;font-family:inherit;gap:4px;justify-content:center;line-height:1;min-height:40px;min-width:40px;padding:0 8px;position:absolute;z-index:2000002}.wp-lightbox-overlay .wp-lightbox-navigation-button-next[hidden],.wp-lightbox-overlay .wp-lightbox-navigation-button-prev[hidden]{display:none}@media (min-width:960px){.wp-lightbox-overlay .wp-lightbox-navigation-button-next,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{bottom:50%;transform:translateY(-50%)}}.wp-lightbox-overlay .wp-lightbox-navigation-button-next:focus,.wp-lightbox-overlay .wp-lightbox-navigation-button-next:hover,.wp-lightbox-overlay .wp-lightbox-navigation-button-next:not(:hover):not(:active):not(.has-background),.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:focus,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:hover,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:not(:hover):not(:active):not(.has-background){background:none;border:none;padding:0 8px}.wp-lightbox-overlay .wp-lightbox-navigation-button-next:has(.wp-lightbox-navigation-text:not([hidden])) .wp-lightbox-navigation-icon svg,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:has(.wp-lightbox-navigation-text:not([hidden])) .wp-lightbox-navigation-icon svg{display:block;height:1.5em;width:1.5em}.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{left:calc(env(safe-area-inset-left) + 16px)}.wp-lightbox-overlay .wp-lightbox-navigation-button-next{right:calc(env(safe-area-inset-right) + 16px)}.wp-lightbox-overlay .wp-lightbox-navigation-icon svg{vertical-align:middle}.wp-lightbox-overlay .lightbox-image-container{height:var(--wp--lightbox-container-height);left:50%;overflow:hidden;position:absolute;top:50%;transform:translate(-50%,-50%);transform-origin:top left;width:var(--wp--lightbox-container-width);z-index:2000001}.wp-lightbox-overlay .wp-block-image{align-items:center;box-sizing:border-box;display:flex;height:100%;justify-content:center;margin:0;position:relative;transform-origin:0 0;width:100%;z-index:3000000}.wp-lightbox-overlay .wp-block-image img{height:var(--wp--lightbox-image-height);min-height:var(--wp--lightbox-image-height);min-width:var(--wp--lightbox-image-width);width:var(--wp--lightbox-image-width)}.wp-lightbox-overlay .wp-block-image figcaption{display:none}.wp-lightbox-overlay button{background:none;border:none}.wp-lightbox-overlay .scrim{background-color:#fff;height:100%;opacity:.9;position:absolute;width:100%;z-index:2000000}.wp-lightbox-overlay.active{visibility:visible}@media not (prefers-reduced-motion){.wp-lightbox-overlay.active{animation:turn-on-visibility .25s both}.wp-lightbox-overlay.active img{animation:turn-on-visibility .35s both}.wp-lightbox-overlay.show-closing-animation:not(.active){animation:turn-off-visibility .35s both}.wp-lightbox-overlay.show-closing-animation:not(.active) img{animation:turn-off-visibility .25s both}.wp-lightbox-overlay.zoom.active{animation:none;opacity:1;visibility:visible}.wp-lightbox-overlay.zoom.active .lightbox-image-container{animation:lightbox-zoom-in .4s}.wp-lightbox-overlay.zoom.active .lightbox-image-container img{animation:none}.wp-lightbox-overlay.zoom.active .scrim{animation:turn-on-visibility .4s forwards}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active){animation:none}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .lightbox-image-container{animation:lightbox-zoom-out .4s}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .lightbox-image-container img{animation:none}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .scrim{animation:turn-off-visibility .4s forwards}}@keyframes show-content-image{0%{visibility:hidden}99%{visibility:hidden}to{visibility:visible}}@keyframes turn-on-visibility{0%{opacity:0}to{opacity:1}}@keyframes turn-off-visibility{0%{opacity:1;visibility:visible}99%{opacity:0;visibility:visible}to{opacity:0;visibility:hidden}}@keyframes lightbox-zoom-in{0%{transform:translate(calc((-100vw + var(--wp--lightbox-scrollbar-width))/2 + var(--wp--lightbox-initial-left-position)),calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale))}to{transform:translate(-50%,-50%) scale(1)}}@keyframes lightbox-zoom-out{0%{transform:translate(-50%,-50%) scale(1);visibility:visible}99%{visibility:visible}to{transform:translate(calc((-100vw + var(--wp--lightbox-scrollbar-width))/2 + var(--wp--lightbox-initial-left-position)),calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale));visibility:hidden}}
+
+</style>
+<style id="wp-block-image-theme-inline-css">
+:root :where(.wp-block-image figcaption){color:#555;font-size:13px;text-align:center}.is-dark-theme :root :where(.wp-block-image figcaption){color:hsla(0,0%,100%,.65)}.wp-block-image{margin:0 0 1em}
+
+</style>
+<style id="wp-block-group-inline-css">
+.wp-block-group{box-sizing:border-box}:where(.wp-block-group.wp-block-group-is-layout-constrained){position:relative}
+
+</style>
+<style id="wp-block-group-theme-inline-css">
+:where(.wp-block-group.has-background){padding:1.25em 2.375em}
+
+</style>
+<style id="wp-block-button-inline-css">
+.wp-block-button__link{align-content:center;box-sizing:border-box;cursor:pointer;display:inline-block;height:100%;text-align:center;word-break:break-word}.wp-block-button__link.aligncenter{text-align:center}.wp-block-button__link.alignright{text-align:right}:where(.wp-block-button__link){border-radius:9999px;box-shadow:none;padding:calc(.667em + 2px) calc(1.333em + 2px);text-decoration:none}.wp-block-button[style*=text-decoration] .wp-block-button__link{text-decoration:inherit}.wp-block-buttons>.wp-block-button.has-custom-width{max-width:none}.wp-block-buttons>.wp-block-button.has-custom-width .wp-block-button__link{width:100%}.wp-block-buttons>.wp-block-button.has-custom-font-size .wp-block-button__link{font-size:inherit}.wp-block-buttons>.wp-block-button[class*=wp-block-button__width]{width:calc(var(--wp--block-button--width)*1% - var(--wp--style--block-gap, .5em)*(1 - var(--wp--block-button--width)/100))}.wp-block-buttons>.wp-block-button.wp-block-button__width-25{width:calc(25% - var(--wp--style--block-gap, .5em)*.75)}.wp-block-buttons>.wp-block-button.wp-block-button__width-50{width:calc(50% - var(--wp--style--block-gap, .5em)*.5)}.wp-block-buttons>.wp-block-button.wp-block-button__width-75{width:calc(75% - var(--wp--style--block-gap, .5em)*.25)}.wp-block-buttons>.wp-block-button.wp-block-button__width-100{flex-basis:100%;width:100%}.wp-block-buttons.is-vertical>.wp-block-button[class*=wp-block-button__width]{width:calc(var(--wp--block-button--width)*1%)}.wp-block-buttons.is-vertical>.wp-block-button.wp-block-button__width-25{width:25%}.wp-block-buttons.is-vertical>.wp-block-button.wp-block-button__width-50{width:50%}.wp-block-buttons.is-vertical>.wp-block-button.wp-block-button__width-75{width:75%}.wp-block-button.is-style-squared,.wp-block-button__link.wp-block-button.is-style-squared{border-radius:0}.wp-block-button.no-border-radius,.wp-block-button__link.no-border-radius{border-radius:0!important}:root :where(.wp-block-button .wp-block-button__link.is-style-outline),:root :where(.wp-block-button.is-style-outline>.wp-block-button__link){border:2px solid;padding:.667em 1.333em}:root :where(.wp-block-button .wp-block-button__link.is-style-outline:not(.has-text-color)),:root :where(.wp-block-button.is-style-outline>.wp-block-button__link:not(.has-text-color)){color:currentColor}:root :where(.wp-block-button .wp-block-button__link.is-style-outline:not(.has-background)),:root :where(.wp-block-button.is-style-outline>.wp-block-button__link:not(.has-background)){background-color:transparent;background-image:none}
+
+</style>
+<style id="wp-block-buttons-inline-css">
+.wp-block-buttons{box-sizing:border-box}.wp-block-buttons.is-vertical{flex-direction:column}.wp-block-buttons.is-vertical>.wp-block-button:last-child{margin-bottom:0}.wp-block-buttons>.wp-block-button{display:inline-block;margin:0}.wp-block-buttons.is-content-justification-left{justify-content:flex-start}.wp-block-buttons.is-content-justification-left.is-vertical{align-items:flex-start}.wp-block-buttons.is-content-justification-center{justify-content:center}.wp-block-buttons.is-content-justification-center.is-vertical{align-items:center}.wp-block-buttons.is-content-justification-right{justify-content:flex-end}.wp-block-buttons.is-content-justification-right.is-vertical{align-items:flex-end}.wp-block-buttons.is-content-justification-space-between{justify-content:space-between}.wp-block-buttons.aligncenter{text-align:center}.wp-block-buttons:not(.is-content-justification-space-between,.is-content-justification-right,.is-content-justification-left,.is-content-justification-center) .wp-block-button.aligncenter{margin-left:auto;margin-right:auto;width:100%}.wp-block-buttons[style*=text-decoration] .wp-block-button,.wp-block-buttons[style*=text-decoration] .wp-block-button__link{text-decoration:inherit}.wp-block-buttons.has-custom-font-size .wp-block-button__link{font-size:inherit}.wp-block-buttons .wp-block-button__link{width:100%}.wp-block-button.aligncenter{text-align:center}
+
+</style>
+<style id="wp-block-list-inline-css">
+ol,ul{box-sizing:border-box}:root :where(.wp-block-list.has-background){padding:1.25em 2.375em}
+
+</style>
+<style id="wp-block-template-part-theme-inline-css">
+:root :where(.wp-block-template-part.has-background){margin-bottom:0;margin-top:0;padding:1.25em 2.375em}
+
+</style>
+<style id="wp-block-heading-inline-css">
+h1:where(.wp-block-heading).has-background,h2:where(.wp-block-heading).has-background,h3:where(.wp-block-heading).has-background,h4:where(.wp-block-heading).has-background,h5:where(.wp-block-heading).has-background,h6:where(.wp-block-heading).has-background{padding:1.25em 2.375em}h1.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h1.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h2.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h2.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h3.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h3.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h4.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h4.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h5.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h5.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h6.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h6.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]){rotate:180deg}
+
+</style>
+<style id="wp-block-details-inline-css">
+.wp-block-details{box-sizing:border-box}.wp-block-details summary{cursor:pointer}
+
+</style>
+<style id="wp-block-table-inline-css">
+.wp-block-table{overflow-x:auto}.wp-block-table table{border-collapse:collapse;width:100%}.wp-block-table thead{border-bottom:3px solid}.wp-block-table tfoot{border-top:3px solid}.wp-block-table td,.wp-block-table th{border:1px solid;padding:.5em}.wp-block-table .has-fixed-layout{table-layout:fixed;width:100%}.wp-block-table .has-fixed-layout td,.wp-block-table .has-fixed-layout th{word-break:break-word}.wp-block-table.aligncenter,.wp-block-table.alignleft,.wp-block-table.alignright{display:table;width:auto}.wp-block-table.aligncenter td,.wp-block-table.aligncenter th,.wp-block-table.alignleft td,.wp-block-table.alignleft th,.wp-block-table.alignright td,.wp-block-table.alignright th{word-break:break-word}.wp-block-table .has-subtle-light-gray-background-color{background-color:#f3f4f5}.wp-block-table .has-subtle-pale-green-background-color{background-color:#e9fbe5}.wp-block-table .has-subtle-pale-blue-background-color{background-color:#e7f5fe}.wp-block-table .has-subtle-pale-pink-background-color{background-color:#fcf0ef}.wp-block-table.is-style-stripes{background-color:transparent;border-collapse:inherit;border-spacing:0}.wp-block-table.is-style-stripes tbody tr:nth-child(odd){background-color:#f0f0f0}.wp-block-table.is-style-stripes.has-subtle-light-gray-background-color tbody tr:nth-child(odd){background-color:#f3f4f5}.wp-block-table.is-style-stripes.has-subtle-pale-green-background-color tbody tr:nth-child(odd){background-color:#e9fbe5}.wp-block-table.is-style-stripes.has-subtle-pale-blue-background-color tbody tr:nth-child(odd){background-color:#e7f5fe}.wp-block-table.is-style-stripes.has-subtle-pale-pink-background-color tbody tr:nth-child(odd){background-color:#fcf0ef}.wp-block-table.is-style-stripes td,.wp-block-table.is-style-stripes th{border-color:transparent}.wp-block-table.is-style-stripes{border-bottom:1px solid #f0f0f0}.wp-block-table .has-border-color td,.wp-block-table .has-border-color th,.wp-block-table .has-border-color tr,.wp-block-table .has-border-color>*{border-color:inherit}.wp-block-table table[style*=border-top-color] tr:first-child,.wp-block-table table[style*=border-top-color] tr:first-child td,.wp-block-table table[style*=border-top-color] tr:first-child th,.wp-block-table table[style*=border-top-color]>*,.wp-block-table table[style*=border-top-color]>* td,.wp-block-table table[style*=border-top-color]>* th{border-top-color:inherit}.wp-block-table table[style*=border-top-color] tr:not(:first-child){border-top-color:currentColor}.wp-block-table table[style*=border-right-color] td:last-child,.wp-block-table table[style*=border-right-color] th,.wp-block-table table[style*=border-right-color] tr,.wp-block-table table[style*=border-right-color]>*{border-right-color:inherit}.wp-block-table table[style*=border-bottom-color] tr:last-child,.wp-block-table table[style*=border-bottom-color] tr:last-child td,.wp-block-table table[style*=border-bottom-color] tr:last-child th,.wp-block-table table[style*=border-bottom-color]>*,.wp-block-table table[style*=border-bottom-color]>* td,.wp-block-table table[style*=border-bottom-color]>* th{border-bottom-color:inherit}.wp-block-table table[style*=border-bottom-color] tr:not(:last-child){border-bottom-color:currentColor}.wp-block-table table[style*=border-left-color] td:first-child,.wp-block-table table[style*=border-left-color] th,.wp-block-table table[style*=border-left-color] tr,.wp-block-table table[style*=border-left-color]>*{border-left-color:inherit}.wp-block-table table[style*=border-style] td,.wp-block-table table[style*=border-style] th,.wp-block-table table[style*=border-style] tr,.wp-block-table table[style*=border-style]>*{border-style:inherit}.wp-block-table table[style*=border-width] td,.wp-block-table table[style*=border-width] th,.wp-block-table table[style*=border-width] tr,.wp-block-table table[style*=border-width]>*{border-style:inherit;border-width:inherit}
+
+</style>
+<style id="wp-block-table-theme-inline-css">
+.wp-block-table{margin:0 0 1em}.wp-block-table td,.wp-block-table th{word-break:normal}.wp-block-table :where(figcaption){color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-table :where(figcaption){color:hsla(0,0%,100%,.65)}
+
+</style>
+<style id="wp-block-post-content-inline-css">
+.wp-block-post-content{display:flow-root}
+
+</style>
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-break:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+</style>
+<link rel='stylesheet' id='entropi-fonts-css' href='wp-content/themes/entropi/assets/fonts/fonts.css' media='all' />
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--bg: #0a1120;--wp--preset--color--panel: #0f1a2c;--wp--preset--color--panel-2: #13203a;--wp--preset--color--text: #e8eef6;--wp--preset--color--muted: #9aabc2;--wp--preset--color--faint: #8193ad;--wp--preset--color--line: #1d2b44;--wp--preset--color--flame: #ff6a2b;--wp--preset--color--flame-hover: #ff8a55;--wp--preset--color--sky: #2bc6da;--wp--preset--color--warn: #f5c443;--wp--preset--color--ok: #3ccf8e;--wp--preset--color--bad: #ff4d5f;--wp--preset--color--light-bg: #f4f6f9;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 15px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--font-size--label: 12px;--wp--preset--font-size--card: 16px;--wp--preset--font-size--body: 18px;--wp--preset--font-size--lede: 19px;--wp--preset--font-size--h-3: 20px;--wp--preset--font-size--subhead: clamp(20px, 2.2vw, 26px);--wp--preset--font-size--h-2: clamp(30px, 3.6vw, 44px);--wp--preset--font-size--metric: clamp(44px, 5vw, 60px);--wp--preset--font-size--display: clamp(40px, 6.2vw, 72px);--wp--preset--font-family--display: "Poppins", sans-serif;--wp--preset--font-family--body: "IBM Plex Sans", sans-serif;--wp--preset--font-family--mono: "IBM Plex Mono", ui-monospace, monospace;--wp--preset--spacing--20: 1.25rem;--wp--preset--spacing--30: 20px;--wp--preset--spacing--40: 28px;--wp--preset--spacing--50: 32px;--wp--preset--spacing--60: 56px;--wp--preset--spacing--70: 72px;--wp--preset--spacing--80: 7.5rem;--wp--preset--spacing--10: 8px;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);--wp--custom--radius: 12px;--wp--custom--pill: 999px;--wp--custom--container: 1180px;--wp--custom--header-height: 72px;--wp--custom--ease: cubic-bezier(.22,.61,.36,1);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:root { --wp--style--global--content-size: 1116px;--wp--style--global--wide-size: 1180px; }:where(body) { margin: 0; }.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }.wp-site-blocks > .alignright { float: right; margin-left: 2em; }.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }:where(.wp-site-blocks) > * { margin-block-start: 0; margin-block-end: 0; }:where(.wp-site-blocks) > :first-child { margin-block-start: 0; }:where(.wp-site-blocks) > :last-child { margin-block-end: 0; }:root { --wp--style--block-gap: 0; }:root :where(.is-layout-flow) > :first-child{margin-block-start: 0;}:root :where(.is-layout-flow) > :last-child{margin-block-end: 0;}:root :where(.is-layout-flow) > *{margin-block-start: 0;margin-block-end: 0;}:root :where(.is-layout-constrained) > :first-child{margin-block-start: 0;}:root :where(.is-layout-constrained) > :last-child{margin-block-end: 0;}:root :where(.is-layout-constrained) > *{margin-block-start: 0;margin-block-end: 0;}:root :where(.is-layout-flex){gap: 0;}:root :where(.is-layout-grid){gap: 0;}.is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{background-color: var(--wp--preset--color--bg);color: var(--wp--preset--color--text);font-family: var(--wp--preset--font-family--body);font-size: var(--wp--preset--font-size--body);line-height: 1.65;padding-top: 0;padding-right: 0;padding-bottom: 0;padding-left: 0;}a:where(:not(.wp-element-button)){color: var(--wp--preset--color--sky);}h1{font-family: var(--wp--preset--font-family--display);font-size: clamp(40px, 6.2vw, 72px);font-weight: 600;letter-spacing: -.035em;line-height: 1.04;}h2{font-family: var(--wp--preset--font-family--display);font-size: clamp(30px, 3.6vw, 44px);font-weight: 600;letter-spacing: -.025em;line-height: 1.12;}:root :where(.wp-element-button, .wp-block-button__link){background-color: var(--wp--preset--color--flame);border-radius: 999px;border-width: 0;color: var(--wp--preset--color--bg);font-family: var(--wp--preset--font-family--body);font-size: 16px;font-style: inherit;font-weight: 600;letter-spacing: inherit;line-height: 1;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-bg-color{color: var(--wp--preset--color--bg) !important;}.has-panel-color{color: var(--wp--preset--color--panel) !important;}.has-panel-2-color{color: var(--wp--preset--color--panel-2) !important;}.has-text-color{color: var(--wp--preset--color--text) !important;}.has-muted-color{color: var(--wp--preset--color--muted) !important;}.has-faint-color{color: var(--wp--preset--color--faint) !important;}.has-line-color{color: var(--wp--preset--color--line) !important;}.has-flame-color{color: var(--wp--preset--color--flame) !important;}.has-flame-hover-color{color: var(--wp--preset--color--flame-hover) !important;}.has-sky-color{color: var(--wp--preset--color--sky) !important;}.has-warn-color{color: var(--wp--preset--color--warn) !important;}.has-ok-color{color: var(--wp--preset--color--ok) !important;}.has-bad-color{color: var(--wp--preset--color--bad) !important;}.has-light-bg-color{color: var(--wp--preset--color--light-bg) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-bg-background-color{background-color: var(--wp--preset--color--bg) !important;}.has-panel-background-color{background-color: var(--wp--preset--color--panel) !important;}.has-panel-2-background-color{background-color: var(--wp--preset--color--panel-2) !important;}.has-text-background-color{background-color: var(--wp--preset--color--text) !important;}.has-muted-background-color{background-color: var(--wp--preset--color--muted) !important;}.has-faint-background-color{background-color: var(--wp--preset--color--faint) !important;}.has-line-background-color{background-color: var(--wp--preset--color--line) !important;}.has-flame-background-color{background-color: var(--wp--preset--color--flame) !important;}.has-flame-hover-background-color{background-color: var(--wp--preset--color--flame-hover) !important;}.has-sky-background-color{background-color: var(--wp--preset--color--sky) !important;}.has-warn-background-color{background-color: var(--wp--preset--color--warn) !important;}.has-ok-background-color{background-color: var(--wp--preset--color--ok) !important;}.has-bad-background-color{background-color: var(--wp--preset--color--bad) !important;}.has-light-bg-background-color{background-color: var(--wp--preset--color--light-bg) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-bg-border-color{border-color: var(--wp--preset--color--bg) !important;}.has-panel-border-color{border-color: var(--wp--preset--color--panel) !important;}.has-panel-2-border-color{border-color: var(--wp--preset--color--panel-2) !important;}.has-text-border-color{border-color: var(--wp--preset--color--text) !important;}.has-muted-border-color{border-color: var(--wp--preset--color--muted) !important;}.has-faint-border-color{border-color: var(--wp--preset--color--faint) !important;}.has-line-border-color{border-color: var(--wp--preset--color--line) !important;}.has-flame-border-color{border-color: var(--wp--preset--color--flame) !important;}.has-flame-hover-border-color{border-color: var(--wp--preset--color--flame-hover) !important;}.has-sky-border-color{border-color: var(--wp--preset--color--sky) !important;}.has-warn-border-color{border-color: var(--wp--preset--color--warn) !important;}.has-ok-border-color{border-color: var(--wp--preset--color--ok) !important;}.has-bad-border-color{border-color: var(--wp--preset--color--bad) !important;}.has-light-bg-border-color{border-color: var(--wp--preset--color--light-bg) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}.has-label-font-size{font-size: var(--wp--preset--font-size--label) !important;}.has-card-font-size{font-size: var(--wp--preset--font-size--card) !important;}.has-body-font-size{font-size: var(--wp--preset--font-size--body) !important;}.has-lede-font-size{font-size: var(--wp--preset--font-size--lede) !important;}.has-h-3-font-size{font-size: var(--wp--preset--font-size--h-3) !important;}.has-subhead-font-size{font-size: var(--wp--preset--font-size--subhead) !important;}.has-h-2-font-size{font-size: var(--wp--preset--font-size--h-2) !important;}.has-metric-font-size{font-size: var(--wp--preset--font-size--metric) !important;}.has-display-font-size{font-size: var(--wp--preset--font-size--display) !important;}.has-display-font-family{font-family: var(--wp--preset--font-family--display) !important;}.has-body-font-family{font-family: var(--wp--preset--font-family--body) !important;}.has-mono-font-family{font-family: var(--wp--preset--font-family--mono) !important;}
+
+</style>
+<link rel='stylesheet' id='entropi-style-css' href='wp-content/themes/entropi/style.css' media='all' />
+<script data-wp-strategy="defer" defer id="entropi-core-js" src="wp-content/themes/entropi/assets/js/entropi-core.js"></script>
+<script data-wp-strategy="defer" defer id="entropi-lang-js" src="wp-content/themes/entropi/assets/js/entropi-lang.js"></script>
+<script data-wp-strategy="defer" defer id="entropi-simulator-js" src="wp-content/themes/entropi/assets/js/entropi-simulator.js"></script>
+<script data-wp-strategy="defer" defer id="entropi-form-js" src="wp-content/themes/entropi/assets/js/entropi-form.js"></script>
+<meta name="generator" content="WordPress 7.1.3" />
+</head>
+
+<body class="home wp-singular page-template-default page page-id-5 wp-embed-responsive wp-theme-entropi has-rail">
+
+<div class="wp-site-blocks"><header class="brandbar wp-block-template-part">
+<p class="skip-wrap wp-block-paragraph"><a class="skip" href="#main" data-en="Skip to content">Lewati ke konten</a></p>
+
+
+
+<div class="wp-block-group wrap is-layout-flow wp-block-group-is-layout-flow">
+<figure class="wp-block-image size-full brand"><a href="#beranda"><img decoding="async" src="wp-content/themes/entropi/assets/images/entropi-logo-white.png" alt="Entropi Energy Solutions"/></a></figure>
+
+
+<nav class="wp-block-group nav is-layout-flow wp-block-group-is-layout-flow" aria-label="Navigasi utama">
+<p class="wp-block-paragraph"><a href="#masalah" data-en="Problem">Masalah</a></p>
+
+
+<p class="wp-block-paragraph"><a href="#solusi" data-en="Solution">Solusi</a></p>
+
+
+<p class="wp-block-paragraph"><a href="#cara-kerja" data-en="How it works">Cara Kerja</a></p>
+
+
+<p class="wp-block-paragraph"><a href="#hasil" data-en="Results">Hasil</a></p>
+</nav>
+
+
+<div class="wp-block-group nav-tools is-layout-flow wp-block-group-is-layout-flow">
+<span class="lang" role="group" aria-label="Bahasa" data-en-aria="Language"><button type="button" data-lang="id" aria-pressed="true">ID</button><button type="button" data-lang="en" aria-pressed="false">EN</button></span>
+
+
+<div class="wp-block-buttons nav-cta is-layout-flex wp-block-buttons-is-layout-flex">
+<div class="wp-block-button is-btn-primary is-btn-nav"><a class="wp-block-button__link wp-element-button" href="#kontak"><span data-en="Request a Demo">Minta Demo</span></a></div>
+</div>
+
+
+<button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Buka menu" data-en-aria="Open menu">
+  <svg class="bars" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2 5h14M2 9h14M2 13h14"/></svg>
+  <svg class="x" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14"/></svg>
+</button>
+</div>
+</div>
+
+
+
+<div id="mobile-menu" class="wp-block-group mobile-menu is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap is-layout-flow wp-block-group-is-layout-flow">
+<ul class="wp-block-list">
+<li><a href="#masalah" data-en="Problem">Masalah</a></li>
+
+
+<li><a href="#solusi" data-en="Solution">Solusi</a></li>
+
+
+<li><a href="#cara-kerja" data-en="How it works">Cara Kerja</a></li>
+
+
+<li><a href="#hasil" data-en="Results">Hasil</a></li>
+
+
+<li><a href="#simulator" data-en="Simulator">Simulator</a></li>
+
+
+<li><a href="#kontak" data-en="Contact">Kontak</a></li>
+</ul>
+
+
+<div class="lang-wrap"><span class="lang" role="group" aria-label="Bahasa" data-en-aria="Language"><button type="button" data-lang="id" aria-pressed="true">ID</button><button type="button" data-lang="en" aria-pressed="false">EN</button></span></div>
+</div>
+</div>
+
+</header>
+
+
+<main id="main" class="wp-block-group is-layout-flow wp-block-group-is-layout-flow"><div class="entry-content wp-block-post-content is-layout-flow wp-block-post-content-is-layout-flow">
+<nav class="wp-block-group rail is-layout-flow wp-block-group-is-layout-flow" aria-label="Nomor bagian">
+<ol class="wp-block-list">
+<li><a href="#beranda" aria-label="01 Beranda">01</a></li>
+
+
+<li><a href="#video" aria-label="02 Video">02</a></li>
+
+
+<li><a href="#masalah" aria-label="03 Masalah">03</a></li>
+
+
+<li><a href="#solusi" aria-label="04 Solusi">04</a></li>
+
+
+<li><a href="#cara-kerja" aria-label="05 Cara Kerja">05</a></li>
+
+
+<li><a href="#hasil" aria-label="06 Hasil dan Validasi">06</a></li>
+
+
+<li><a href="#simulator" aria-label="07 Duck Curve Simulator">07</a></li>
+
+
+<li><a href="#use-case" aria-label="08 Use Case">08</a></li>
+
+
+<li><a href="#dampak" aria-label="09 Bisnis dan Dampak">09</a></li>
+
+
+<li><a href="#roadmap" aria-label="10 Roadmap">10</a></li>
+
+
+<li><a href="#kontak" aria-label="11 Kontak">11</a></li>
+</ol>
+</nav>
+
+
+
+<section id="beranda" class="wp-block-group hero l1-hero is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group blueprint is-layout-flow wp-block-group-is-layout-flow"></div>
+
+
+<div class="wp-block-group wrap is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<p class="eyebrow reveal wp-block-paragraph"><span data-en="MPC-901 · predictive control for gas + solar">MPC-901 &middot; kontrol prediktif PLTG + PLTS</span></p>
+
+
+<h1 id="hero-title" class="wp-block-heading reveal d1"><!-- HEADLINE OPTIONS (client decision recorded in site-spec.json decisions.hero):
+     A. "Nature prefers chaos. We prefer control."      ID: "Alam memilih kekacauan. Kami memilih kendali."   (kept as footer sign-off)
+     B. "It reads the sky. Then readies the turbine."   ID: "Membaca langit. Lalu menyiapkan turbin."          (used as hero subheading)
+     C. "One step ahead of the clouds."                 ID: "Selangkah di depan awan."                         <== CHOSEN (h1)
+--><span data-en="One step ahead of &lt;em&gt;the clouds.&lt;/em&gt;">Selangkah di depan <em>awan.</em></span></h1>
+
+
+<p class="subhead reveal d1 wp-block-paragraph"><span data-en="It reads the sky. Then readies the turbine.">Membaca langit. Lalu menyiapkan turbin.</span></p>
+
+
+<p class="lede reveal d2 wp-block-paragraph"><span data-en="MPC-901 reads 24-hour weather and load forecasts, then sends setpoints to the governor and DCS you already run, so a gas turbine paired with solar moves more calmly. No new hardware; if the link drops, control falls back to PID.">MPC-901 membaca prakiraan cuaca dan beban 24 jam, lalu mengirim setpoint ke governor dan DCS yang sudah ada, sehingga PLTG yang berpasangan dengan PLTS bergerak lebih tenang. Tanpa hardware baru; bila link putus, kendali kembali ke PID.</span></p>
+
+
+<div class="wp-block-buttons actions reveal d3 is-layout-flex wp-block-buttons-is-layout-flex">
+<div class="wp-block-button is-btn-primary"><a class="wp-block-button__link wp-element-button" href="#kontak"><span data-en="Request a Demo">Minta Demo</span></a></div>
+
+
+<div class="wp-block-button is-btn-ghost"><a class="wp-block-button__link wp-element-button" href="#cara-kerja"><span data-en="See how it works">Lihat Cara Kerja</span></a></div>
+</div>
+</div>
+
+
+<figure class="hero-fig reveal d2">
+      <svg viewBox="0 0 660 380" fill="none" role="img" aria-label="Ilustrasi 24 jam: beban bersih bergelombang saat awan lewat di siang hari, produksi PLTS berbentuk lonceng, dan setpoint MPC yang lebih halus.">
+        <text class="anno" x="40" y="22">FIG-00 &middot; NET LOAD &middot; 24 JAM</text>
+        <text class="anno warn" x="620" y="22" text-anchor="end">ILUSTRASI</text>
+        <g stroke="var(--line)" stroke-width="1"><line x1="40" y1="115" x2="620" y2="115"/><line x1="40" y1="190" x2="620" y2="190"/><line x1="40" y1="265" x2="620" y2="265"/></g>
+        <line x1="40" y1="340" x2="620" y2="340" stroke="var(--line-strong)" stroke-opacity=".6"/>
+        <g stroke="var(--faint)" stroke-opacity=".6"><line x1="40" y1="336" x2="40" y2="344"/><line x1="185" y1="336" x2="185" y2="344"/><line x1="330" y1="336" x2="330" y2="344"/><line x1="475" y1="336" x2="475" y2="344"/><line x1="620" y1="336" x2="620" y2="344"/></g>
+        <g class="anno"><text x="40" y="362" text-anchor="middle">00</text><text x="185" y="362" text-anchor="middle">06</text><text x="330" y="362" text-anchor="middle">12</text><text x="475" y="362" text-anchor="middle">18</text><text x="620" y="362" text-anchor="middle">24</text></g>
+        <path d="M40 340 L161 340 C227 340 260 126 330 121 C400 126 433 340 499 340 L620 340" fill="var(--warn)" fill-opacity=".1" stroke="var(--warn)" stroke-opacity=".7" stroke-width="1.25"/>
+        <path d="M40 147 L79 139 L119 151 L161 134 L194 173 L220 203 L243 233 L263 207 L279 263 L296 229 L312 271 L328 237 L345 276 L361 220 L381 254 L400 203 L423 194 L450 160 L473 130 L499 104 L538 96 L577 117 L620 139" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 5"/>
+        <path class="draw" pathLength="1" d="M40 151 C128 143 178 169 243 216 C309 254 374 250 423 203 C473 151 522 104 620 134" stroke="var(--data-line)" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="620" cy="134" r="4.5" fill="var(--flame)"/>
+        <!-- annotations -->
+        <g stroke="var(--faint)" stroke-width="1"><line x1="161" y1="300" x2="161" y2="334"/><line x1="538" y1="70" x2="538" y2="88"/></g>
+        <text class="anno" x="166" y="312">06:00 &middot; PLTS NAIK</text>
+        <g stroke="var(--flame)" stroke-width="1"><line x1="312" y1="258" x2="312" y2="298"/><line x1="292" y1="278" x2="332" y2="278"/><circle cx="312" cy="278" r="6"/></g>
+        <text class="anno" x="340" y="304">AWAN LEWAT</text>
+        <text class="anno" x="538" y="62" text-anchor="middle">PUNCAK SORE</text>
+        <text class="anno sky" x="612" y="166" text-anchor="end">SETPOINT MPC</text>
+      </svg>
+      <figcaption class="caption" data-en="net load (dashed) &middot; solar (yellow) &middot; MPC setpoint (line) &middot; illustration, not data">beban bersih (putus-putus) &middot; PLTS (kuning) &middot; setpoint MPC (garis) &middot; ilustrasi, bukan data</figcaption>
+    </figure>
+
+
+<div class="wp-block-group hero-strip reveal d3 is-layout-flow wp-block-group-is-layout-flow" aria-label="Hasil utama simulasi">
+<div class="wp-block-group metrics is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group card metric is-layout-flow wp-block-group-is-layout-flow">
+<p class="label wp-block-paragraph"><span data-en="Unserved energy">Energi tak terlayani</span></p>
+
+
+<p class="num accent wp-block-paragraph">-12,5%</p>
+
+
+<p class="wp-block-paragraph"><span data-en="unserved energy vs PID">energi tak terlayani vs PID</span></p>
+</div>
+
+
+<div class="wp-block-group card metric is-layout-flow wp-block-group-is-layout-flow">
+<p class="label wp-block-paragraph"><span data-en="IGV valve travel">Gerak katup IGV</span></p>
+
+
+<p class="num wp-block-paragraph">3,4x</p>
+
+
+<p class="wp-block-paragraph"><span data-en="less IGV valve travel vs PID">lebih sedikit gerak katup IGV vs PID</span></p>
+</div>
+
+
+<div class="wp-block-group card metric is-layout-flow wp-block-group-is-layout-flow">
+<p class="label wp-block-paragraph"><span data-en="Integration">Integrasi</span></p>
+
+
+<p class="num wp-block-paragraph">0</p>
+
+
+<p class="wp-block-paragraph"><span data-en="new hardware">hardware baru</span></p>
+</div>
+</div>
+
+
+<div class="wp-block-group strip-foot is-layout-flow wp-block-group-is-layout-flow">
+<p class="sim-note wp-block-paragraph"><span data-en="Simulation results, not field data. Same scenario for all three methods.">Hasil simulasi, bukan data lapangan. Skenario sama untuk ketiga metode.</span></p>
+
+
+<div class="wp-block-buttons strip-cta is-layout-flex wp-block-buttons-is-layout-flex">
+<div class="wp-block-button is-btn-text"><a class="wp-block-button__link wp-element-button" href="#hasil"><span data-en="Full comparison">Tabel lengkap</span></a></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+
+<div class="wp-block-group horizon is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group horizon-mark is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+
+<section id="video" class="wp-block-group block is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap split is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split-text is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">02</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="video-title" class="wp-block-heading"><span data-en="See Entropi in under a minute">Lihat Entropi dalam kurang dari semenit</span></h2>
+</div>
+</div>
+
+
+<div class="wp-block-group reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<p id="video-summary" class="video-summary wp-block-paragraph"><span data-en="&lt;strong&gt;Video summary:&lt;/strong&gt; solar power is taking over the grid, and every passing cloud forces the gas turbine to make up the difference after the fact. Entropi introduces MPC-901, a predictive layer that reads the weather forecast and readies the turbine early by sending setpoints to the existing DCS/PID. On a digital twin of a GE Frame 9E plant with 21 MWp of solar, the simulation shows -12,5% unserved energy, 3,4x less valve wear and 0 new hardware."><strong>Ringkasan video:</strong> PLTS makin mendominasi jaringan, dan setiap awan yang lewat memaksa turbin gas menutup selisih daya setelah kejadian. Entropi memperkenalkan MPC-901, lapisan prediktif yang membaca prakiraan cuaca dan menyiapkan turbin lebih awal dengan mengirim setpoint ke DCS/PID yang sudah ada. Pada digital twin PLTG GE Frame 9E dengan PLTS 21 MWp, simulasi menunjukkan -12,5% energi tak terlayani, 3,4x lebih sedikit keausan katup, dan 0 hardware baru.</span></p>
+
+
+<details class="wp-block-details transcript is-layout-flow wp-block-details-is-layout-flow"><summary><span data-en="Transcript &amp;amp; scene order">Transkrip &amp; urutan adegan</span></summary>
+<ol class="wp-block-list scenes">
+<li><time>0:00&ndash;0:02</time><span><b>Pembuka</b>Teks layar: <q lang="en">Welcome to the future of power plants</q></span></li>
+
+
+<li><time>0:02&ndash;0:07</time><span><b>Pertanyaan riset</b>Kotak prompt AI diketik, dengan lampiran laporan transisi energi Indonesia dan sebuah jurnal: <q lang="en">What happens to power plants in the future of renewable energy? Use IEA Renewables 2025 and Indonesia&#8217;s grid data. Quantify what solar intermittency costs us.</q></span></li>
+
+
+<li><time>0:08&ndash;0:09</time><span><b>Agen bekerja</b>Status di layar: <q lang="en">Reading IETO 2026&#8230;</q>, <q lang="en">Extracting flexibility limits from the microgrid study</q>, <q lang="en">Pulling IEA Renewables 2025 electricity forecast</q></span></li>
+
+
+<li><!-- [angka video: hanya di dalam video] Divalidasi tim 2026-10-23, tapi jangan ditulis di teks halaman/ringkasan/transkrip. Lihat VIDEO-SCENES.md. --><time>0:10&ndash;0:11</time><span><b>Jawaban riset</b><q lang="en">Solar is taking over the grid &mdash; and the plants left behind must learn to follow it.</q> Energi terbarukan diproyeksikan bertambah hampir 4.600 GW secara global pada 2025&ndash;2030 (IEA), disertai ringkasan potensi surya Indonesia.</span></li>
+
+
+<li><!-- [angka video: hanya di dalam video] Divalidasi tim 2026-10-23, tapi jangan ditulis di teks halaman/ringkasan/transkrip. Lihat VIDEO-SCENES.md. --><time>0:12&ndash;0:15</time><span><b>Biaya intermitensi</b>Tabel konteks: lebih dari 600 microgrid terisolasi di Indonesia (CII), sebaran permintaan listrik antarwilayah, perbandingan biaya listrik pulau timur dan Jawa, serta grafik biaya listrik. <q lang="en">Gas turbines must cover every cloud and every sunset &mdash; but conventional PID control only reacts after the dip.</q></span></li>
+
+
+<li><time>0:16&ndash;0:19</time><span><b>Peralihan ke produk</b>Toggle <q lang="en">Ask | entropi</q> dengan logo putih: <q lang="en">Nature prefers chaos. We prefer control.</q></span></li>
+
+
+<li><time>0:20&ndash;0:23</time><span><b>Peluncuran</b><q lang="en">Introducing ENTROPI. Predictive control for gas turbines.</q> Tampilan console MPC-901.</span></li>
+
+
+<li><time>0:24&ndash;0:29</time><span><b>Cara kerja</b><q lang="en">It reads the sky. Then readies the turbine.</q> Diagram: Weather forecast &rarr; ENTROPI (predicts) &rarr; DCS/PID (existing) &rarr; Turbine (ramps early) &rarr; Factory (stays on).</span></li>
+
+
+<li><!-- Minute counters on this scene are mid-animation frames (forbidden list in site-spec.json): described without numbers. --><time>0:30&ndash;0:37</time><span><b>Digital twin</b><q lang="en">The prototype: A digital twin of a GE Frame 9E plant with 21 MWp of solar.</q> Jam simulasi, frekuensi grid, dan penghitung waktu di luar &plusmn;0,2 Hz untuk PID dan Entropi.</span></li>
+
+
+<li><time>0:38&ndash;0:39</time><span><b>Hasil 1</b><q lang="en">&minus;12.5% unserved energy</q> (7-day simulation, against standard PID control)</span></li>
+
+
+<li><time>0:40&ndash;0:41</time><span><b>Hasil 2</b><q lang="en">3.4&times; less valve wear</q></span></li>
+
+
+<li><time>0:42&ndash;0:43</time><span><b>Hasil 3</b><q lang="en">0 new hardware</q></span></li>
+
+
+<li><time>0:44&ndash;0:48</time><span><b>Penutup</b>Logo Entropi: <q lang="en">One step ahead of the clouds.</q> <q lang="en">Built by engineering students at ITB, Bandung &middot; @entropi.eng &middot; Pertamuda 2026</q></span></li>
+</ol>
+
+
+<p class="t-note wp-block-paragraph">Waktu dibaca dari frame tiap 2 detik (&plusmn;2 detik). Teks layar berbahasa Inggris dikutip apa adanya. Angka hasil adalah simulasi, bukan data lapangan.</p>
+</details>
+</div>
+</div>
+
+
+    <div class="reveal d2 video-col"><figure class="video-card">
+  <video id="entropi-video" controls playsinline preload="none" aria-describedby="video-summary" width="1280" height="720" poster="wp-content/themes/entropi/assets/media/entropi-video-poster.webp">
+    <source src="wp-content/themes/entropi/assets/media/entropi-future-of-power-plants-720p.mp4" type="video/mp4">
+    <!-- No captions file by client decision (2026-10-23): the transcript below is the text alternative. -->
+    Peramban Anda tidak mendukung video HTML5. Ringkasan isi video tersedia di bawah.
+  </video>
+  <figcaption class="video-meta"><span>Entropi: Future of Power Plants</span><span><span data-en="&amp;plusmn;48 seconds &amp;middot; no autoplay &amp;middot; transcript below">&plusmn;48 detik &middot; tanpa autoplay &middot; transkrip tersedia</span></span></figcaption>
+</figure></div>
+</div>
+</section>
+
+
+
+<div class="wp-block-group horizon is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group horizon-mark is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+
+<section id="masalah" class="wp-block-group block is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split-text is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">03</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="masalah-title" class="wp-block-heading"><span data-en="Solar is intermittent. The turbine pays for it.">PLTS intermiten. Turbin yang menanggung.</span></h2>
+
+
+<p class="wp-block-paragraph">Setiap awan yang lewat membuat PLTG sering ramping dan katup bekerja berlebihan.</p>
+</div>
+</div>
+
+
+<div class="wp-block-group stack is-layout-flow wp-block-group-is-layout-flow">
+<article class="wp-block-group pain card reveal is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group ico ico-pain-cloud is-layout-flow wp-block-group-is-layout-flow"></div>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h3 class="wp-block-heading">Awan datang tanpa aba-aba</h3>
+
+
+<p class="wp-block-paragraph">Saat awan menutupi PLTS, PLTG harus menutup selisih daya dalam hitungan menit. Beban bersih naik-turun tajam sepanjang siang.</p>
+</div>
+</article>
+
+
+<article class="wp-block-group pain card reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group ico ico-pain-valve is-layout-flow wp-block-group-is-layout-flow"></div>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h3 class="wp-block-heading">Katup bekerja berlebihan</h3>
+
+
+<p class="wp-block-paragraph">Pada simulasi baseline PID, gerak katup IGV mencapai <span class="fig">2270%</span>, jauh di atas kontrol konvensional (341%). Gerak berlebih berarti keausan dan operasi yang gelisah.</p>
+</div>
+</article>
+
+
+<article class="wp-block-group pain card reveal d2 is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group ico ico-pain-react is-layout-flow wp-block-group-is-layout-flow"></div>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h3 class="wp-block-heading">Kontrol yang hanya bereaksi</h3>
+
+
+<p class="wp-block-paragraph">PID bertindak setelah frekuensi bergeser, bukan sebelumnya. Di simulasi, energi tak terlayani pada PID masih <span class="fig">79,8 MWh/minggu</span>.</p>
+</div>
+</article>
+</div>
+</div>
+
+
+<aside class="wp-block-group card stats-card reveal d1 is-layout-flow wp-block-group-is-layout-flow" aria-label="Konteks">
+<p class="label wp-block-paragraph"><!-- Footnote mapping: [1] IEA -> ±4.600 GW (global) and [2] Climate Impact Innovations -> >600 microgrid are confirmed by the client. -->Konteks</p>
+
+
+<div class="wp-block-group stat is-layout-flow wp-block-group-is-layout-flow">
+<p class="val wp-block-paragraph">56%<sup><a href="#fn-3" aria-label="Catatan kaki 3">[3]</a></sup></p>
+
+
+<p class="wp-block-paragraph">excess energy pada microgrid dengan sumber tidak stabil dan fossil</p>
+</div>
+
+
+<div class="wp-block-group stat is-layout-flow wp-block-group-is-layout-flow">
+<p class="val wp-block-paragraph">&gt;600<sup><a href="#fn-2" aria-label="Catatan kaki 2">[2]</a></sup></p>
+
+
+<p class="wp-block-paragraph">microgrid terisolasi di Indonesia</p>
+
+
+<p class="tag scope wp-block-paragraph">Indonesia</p>
+</div>
+
+
+<div class="wp-block-group stat is-layout-flow wp-block-group-is-layout-flow">
+<p class="val wp-block-paragraph">&plusmn;4.600&nbsp;GW<sup><a href="#fn-1" aria-label="Catatan kaki 1">[1]</a></sup></p>
+
+
+<p class="wp-block-paragraph">proyeksi penambahan energi terbarukan global</p>
+
+
+<p class="tag scope wp-block-paragraph">Global</p>
+</div>
+
+
+<ol class="wp-block-list footnotes">
+<li id="fn-1"><span>IEA, <a href="https://www.iea.org/reports/renewables-2025/renewable-electricity" rel="noopener" target="_blank">Renewables 2025 &mdash; Renewable electricity</a>. Untuk angka &plusmn;4.600 GW (global).</span></li>
+
+
+<li id="fn-2"><span>Climate Impact Innovations, <a href="https://climateimpactinnovations.com/indonesias-grid-fragmentation-why-hvdc-transmission-is-the-key-to-clean-energy-transition/" rel="noopener" target="_blank">Indonesia&rsquo;s Grid Fragmentation: Why HVDC Transmission Is the Key to Clean Energy Transition</a>. Untuk angka &gt;600 microgrid.</span></li>
+
+
+<li id="fn-3"><span>Gharibvand dkk. (2024), <a href="https://doi.org/10.1016/j.rser.2024.114632" rel="noopener" target="_blank">Renewable and Sustainable Energy Reviews, 201, 114632</a>. Untuk angka 56%.</span></li>
+</ol>
+</aside>
+</div>
+
+
+<div class="wp-block-group alts-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">03.b</p>
+
+
+<h3 class="wp-block-heading">Alternatif dan kenapa kalah</h3>
+</div>
+
+
+<div class="wp-block-group grid g4 is-layout-flow wp-block-group-is-layout-flow">
+<article class="wp-block-group card alt reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="label wp-block-paragraph">Alternatif 01</p>
+
+
+<h3 class="wp-block-heading">BESS</h3>
+
+
+<p class="wp-block-paragraph">Mahal di skala pembangkit.</p>
+</article>
+
+
+<article class="wp-block-group card alt reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<p class="label wp-block-paragraph">Alternatif 02</p>
+
+
+<h3 class="wp-block-heading">Turbin cadangan</h3>
+
+
+<p class="wp-block-paragraph">Boros bahan bakar.</p>
+</article>
+
+
+<article class="wp-block-group card alt reveal d2 is-layout-flow wp-block-group-is-layout-flow">
+<p class="label wp-block-paragraph">Alternatif 03</p>
+
+
+<h3 class="wp-block-heading">Curtailment</h3>
+
+
+<p class="wp-block-paragraph">Membuang investasi solar.</p>
+</article>
+
+
+<article class="wp-block-group card alt reveal d3 is-layout-flow wp-block-group-is-layout-flow">
+<p class="label wp-block-paragraph">Alternatif 04</p>
+
+
+<h3 class="wp-block-heading">Kontrol OEM</h3>
+
+
+<p class="wp-block-paragraph">Tidak dirancang untuk gas + solar.</p>
+</article>
+</div>
+</div>
+</section>
+
+
+
+<div class="wp-block-group horizon is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group horizon-mark is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+
+<section id="solusi" class="wp-block-group block is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split flip is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split-text is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">04</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="solusi-title" class="wp-block-heading"><span data-en="A planning layer on top of what you already run">Lapisan perencana di atas kontrol yang sudah ada</span></h2>
+
+
+<p class="wp-block-paragraph">MPC-901 duduk di atas governor/DCS. Ia merencanakan, kontrol lokal tetap mengeksekusi.</p>
+</div>
+</div>
+</div>
+
+
+<div class="wp-block-group reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<ul class="wp-block-list chips">
+<li>Hanya mengirim setpoint</li>
+
+
+<li>Tidak mengganti hardware</li>
+
+
+<li>Fail-safe ke PID</li>
+</ul>
+
+
+<ul class="wp-block-list keypoints">
+<li>Input: prakiraan cuaca dan beban 24 jam ke depan.</li>
+
+
+<li>Output: hanya setpoint. Governor, DCS, dan turbin GE Frame 9E tidak diganti.</li>
+
+
+<li>Bila link putus, PID bawaan langsung memegang kendali.</li>
+</ul>
+</div>
+</div>
+
+
+<div class="card diagram flow-card reveal">
+      <div class="blueprint" aria-hidden="true"></div>
+      <div class="chart-head"><span class="label">FIG-01 &middot; Arsitektur berlapis</span><span class="tag">5 lapis</span></div>
+      <!-- Solusi block diagram. Horizontal on >720px, vertical on phones (only one is rendered). -->
+<svg class="flow flow-h" viewBox="0 0 1130 330" role="img" aria-labelledby="flow-h-t flow-h-d">
+  <title id="flow-h-t">Arsitektur berlapis MPC-901</title>
+  <desc id="flow-h-d">Lima lapis dari kiri ke kanan: 01 Input, prakiraan cuaca dan beban 24 jam. 02 Otak, MPC-901. 03 Kontrol eksisting, governor atau DCS. 04 Aktuator, turbin GE Frame 9E. 05 Sistem, grid pabrik dan PLTS 21 MWp. MPC-901 hanya mengirim setpoint ke governor atau DCS. Pengukuran dari sistem kembali ke MPC-901. Jalur fail-safe: bila link putus, PID bawaan langsung memegang governor.</desc>
+  <defs>
+    <marker id="ah-h-sky" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="ah-sky" d="M0 0L8 4L0 8z"/></marker>
+    <marker id="ah-h-flame" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="ah-flame" d="M0 0L8 4L0 8z"/></marker>
+    <marker id="ah-h-faint" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="ah-faint" d="M0 0L8 4L0 8z"/></marker>
+    <marker id="ah-h-ghost" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="ah-ghost" d="M0 0L8 4L0 8z"/></marker>
+  </defs>
+  <!-- fail-safe PID (dashed) above the existing control layer -->
+  <g class="fade">
+    <rect class="box pid" x="494" y="14" width="140" height="44" rx="8"/>
+    <text class="ttl" x="564" y="42" text-anchor="middle" style="font-size:15px">PID bawaan</text>
+    <path class="safe" d="M564 60 V116" marker-end="url(#ah-h-ghost)"/>
+    <text class="wl safe-t" x="554" y="92" text-anchor="end">FAIL-SAFE</text>
+    <text class="wl mute" x="574" y="92">bila link putus</text>
+  </g>
+  <!-- bracket: existing hardware, not replaced -->
+  <g class="fade">
+    <path class="brk" d="M710 106 V98 H1120 V106"/>
+    <text class="wl mute" x="915" y="90" text-anchor="middle">HARDWARE EKSISTING &#183; TIDAK DIGANTI</text>
+  </g>
+  <!-- layers -->
+  <g>
+    <rect class="box" x="8" y="120" width="176" height="104" rx="10"/>
+    <text class="lyr" x="24" y="148">01 &#183; INPUT</text><text class="ttl" x="24" y="180">Prakiraan</text><text class="sub" x="24" y="204">cuaca + beban 24 jam</text>
+    <rect class="box brain" x="242" y="120" width="176" height="104" rx="10"/>
+    <text class="lyr hot" x="258" y="148">02 &#183; OTAK</text><text class="ttl" x="258" y="180">MPC-901</text><text class="sub" x="258" y="204">optimasi setpoint</text>
+    <rect class="box" x="476" y="120" width="176" height="104" rx="10"/>
+    <text class="lyr" x="492" y="148">03 &#183; KONTROL</text><text class="ttl" x="492" y="180">Governor / DCS</text><text class="sub" x="492" y="204">eksisting, tetap</text>
+    <rect class="box" x="710" y="120" width="176" height="104" rx="10"/>
+    <text class="lyr" x="726" y="148">04 &#183; AKTUATOR</text><text class="ttl" x="726" y="180">GE Frame 9E</text><text class="sub" x="726" y="204">IGV + bahan bakar</text>
+    <rect class="box" x="944" y="120" width="176" height="104" rx="10"/>
+    <text class="lyr" x="960" y="148">05 &#183; SISTEM</text><text class="ttl" x="960" y="180">Grid pabrik</text><text class="sub" x="960" y="204">+ PLTS 21 MWp</text>
+  </g>
+  <!-- forward wires (self-drawing) -->
+  <path class="wire draw" pathLength="1" style="--d:.1s" d="M186 172 H238" marker-end="url(#ah-h-sky)"/>
+  <path class="wire sp draw" pathLength="1" style="--d:.4s" d="M420 172 H472" marker-end="url(#ah-h-flame)"/>
+  <path class="wire draw" pathLength="1" style="--d:.7s" d="M654 172 H706" marker-end="url(#ah-h-sky)"/>
+  <path class="wire draw" pathLength="1" style="--d:1s" d="M888 172 H940" marker-end="url(#ah-h-sky)"/>
+  <text class="wl hot" x="447" y="110" text-anchor="middle">SETPOINT SAJA</text>
+  <text class="wl" x="213" y="246" text-anchor="middle">data</text>
+  <text class="wl" x="681" y="246" text-anchor="middle">kontrol lokal</text>
+  <text class="wl" x="915" y="246" text-anchor="middle">daya</text>
+  <!-- feedback loop -->
+  <g class="fade">
+    <path class="fb" d="M1032 226 V292 H330 V230" marker-end="url(#ah-h-faint)"/>
+    <text class="wl mute" x="681" y="316" text-anchor="middle">pengukuran &amp; telemetri kembali ke MPC-901</text>
+  </g>
+</svg>
+<svg class="flow flow-v" viewBox="0 0 360 690" role="img" aria-labelledby="flow-v-t flow-v-d">
+  <title id="flow-v-t">Arsitektur berlapis MPC-901</title>
+  <desc id="flow-v-d">Lima lapis dari atas ke bawah: Input prakiraan cuaca dan beban 24 jam, MPC-901, governor atau DCS eksisting, turbin GE Frame 9E, grid pabrik dan PLTS 21 MWp. MPC-901 hanya mengirim setpoint. Pengukuran kembali ke MPC-901. Bila link putus, PID bawaan memegang governor.</desc>
+  <defs>
+    <marker id="ah-v-sky" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="ah-sky" d="M0 0L8 4L0 8z"/></marker>
+    <marker id="ah-v-flame" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="ah-flame" d="M0 0L8 4L0 8z"/></marker>
+    <marker id="ah-v-faint" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="ah-faint" d="M0 0L8 4L0 8z"/></marker>
+    <marker id="ah-v-ghost" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="ah-ghost" d="M0 0L8 4L0 8z"/></marker>
+  </defs>
+  <g>
+    <rect class="box" x="40" y="20" width="206" height="86" rx="10"/>
+    <text class="lyr" x="56" y="46">01 &#183; INPUT</text><text class="ttl" x="56" y="72">Prakiraan</text><text class="sub" x="56" y="92">cuaca + beban 24 jam</text>
+    <rect class="box brain" x="40" y="158" width="206" height="86" rx="10"/>
+    <text class="lyr hot" x="56" y="184">02 &#183; OTAK</text><text class="ttl" x="56" y="210">MPC-901</text><text class="sub" x="56" y="230">optimasi setpoint</text>
+    <rect class="box" x="40" y="296" width="206" height="86" rx="10"/>
+    <text class="lyr" x="56" y="322">03 &#183; KONTROL</text><text class="ttl" x="56" y="348">Governor / DCS</text><text class="sub" x="56" y="368">eksisting, tetap</text>
+    <rect class="box" x="40" y="434" width="206" height="86" rx="10"/>
+    <text class="lyr" x="56" y="460">04 &#183; AKTUATOR</text><text class="ttl" x="56" y="486">GE Frame 9E</text><text class="sub" x="56" y="506">IGV + bahan bakar</text>
+    <rect class="box" x="40" y="572" width="206" height="86" rx="10"/>
+    <text class="lyr" x="56" y="598">05 &#183; SISTEM</text><text class="ttl" x="56" y="624">Grid pabrik</text><text class="sub" x="56" y="644">+ PLTS 21 MWp</text>
+  </g>
+  <path class="wire draw" pathLength="1" style="--d:.1s" d="M143 108 V154" marker-end="url(#ah-v-sky)"/>
+  <path class="wire sp draw" pathLength="1" style="--d:.4s" d="M143 246 V292" marker-end="url(#ah-v-flame)"/>
+  <path class="wire draw" pathLength="1" style="--d:.7s" d="M143 384 V430" marker-end="url(#ah-v-sky)"/>
+  <path class="wire draw" pathLength="1" style="--d:1s" d="M143 522 V568" marker-end="url(#ah-v-sky)"/>
+  <text class="wl" x="153" y="135">data</text>
+  <text class="wl hot" x="153" y="273">SETPOINT SAJA</text>
+  <text class="wl" x="153" y="411">kontrol lokal</text>
+  <text class="wl" x="153" y="549">daya</text>
+  <g class="fade">
+    <text class="wl safe-t" x="310" y="300" text-anchor="middle">FAIL-SAFE</text>
+    <rect class="box pid" x="268" y="310" width="84" height="58" rx="8"/>
+    <text class="ttl" x="310" y="336" text-anchor="middle" style="font-size:15px">PID</text>
+    <text class="sub" x="310" y="356" text-anchor="middle">bawaan</text>
+    <path class="safe" d="M266 339 H250" marker-end="url(#ah-v-ghost)"/>
+    <text class="wl mute" x="310" y="388" text-anchor="middle">bila link</text>
+    <text class="wl mute" x="310" y="402" text-anchor="middle">putus</text>
+  </g>
+  <g class="fade">
+    <path class="fb" d="M40 615 H22 V201 H36" marker-end="url(#ah-v-faint)"/>
+    <text class="wl mute" transform="translate(16 408) rotate(-90)" text-anchor="middle">umpan balik pengukuran</text>
+  </g>
+</svg>
+    </div>
+</div>
+</section>
+
+
+
+<div class="wp-block-group horizon is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group horizon-mark is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+
+<section id="cara-kerja" class="wp-block-group block is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap split is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split-text is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">05</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="cara-title" class="wp-block-heading"><span data-en="How it works">Cara kerja</span></h2>
+
+
+<p class="wp-block-paragraph">Empat langkah yang berulang setiap siklus kontrol. Operator tetap melihat dan memegang semuanya.</p>
+</div>
+</div>
+</div>
+
+
+<div class="wp-block-group steps is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group card step reveal is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group step-top is-layout-flow wp-block-group-is-layout-flow">
+<p class="step-no wp-block-paragraph">01</p>
+
+
+<div class="wp-block-group ico ico-step-predict is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+<h3 class="wp-block-heading">Prediksi</h3>
+
+
+<p class="wp-block-paragraph">Membaca prakiraan cuaca dan beban 24 jam ke depan, termasuk kapan awan diperkirakan menutupi PLTS.</p>
+</div>
+
+
+<div class="wp-block-group card step reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group step-top is-layout-flow wp-block-group-is-layout-flow">
+<p class="step-no wp-block-paragraph">02</p>
+
+
+<div class="wp-block-group ico ico-step-optimize is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+<h3 class="wp-block-heading">Optimasi</h3>
+
+
+<p class="wp-block-paragraph">MPC-901 menyusun rencana setpoint yang menjaga frekuensi dan mengurangi gerak katup, dengan batas operasi turbin sebagai kendala.</p>
+</div>
+
+
+<div class="wp-block-group card step reveal d2 is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group step-top is-layout-flow wp-block-group-is-layout-flow">
+<p class="step-no wp-block-paragraph">03</p>
+
+
+<div class="wp-block-group ico ico-step-execute is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+<h3 class="wp-block-heading">Eksekusi</h3>
+
+
+<p class="wp-block-paragraph">Hanya setpoint yang dikirim ke governor/DCS yang ada. Loop kontrol lokal tetap bekerja seperti biasa.</p>
+</div>
+
+
+<div class="wp-block-group card step reveal d3 is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group step-top is-layout-flow wp-block-group-is-layout-flow">
+<p class="step-no wp-block-paragraph">04</p>
+
+
+<div class="wp-block-group ico ico-step-monitor is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+<h3 class="wp-block-heading">Monitoring</h3>
+
+
+<p class="wp-block-paragraph">Hasil diukur terus dan rencana diperbarui tiap siklus. Bila link putus, kendali kembali ke PID.</p>
+</div>
+</div>
+</div>
+</section>
+
+
+
+<section id="hasil" class="wp-block-group block is-instrument is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">06</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="hasil-title" class="wp-block-heading"><span data-en="Results &amp;amp; validation">Hasil &amp; Validasi</span></h2>
+
+
+<p class="wp-block-paragraph">Simulasi 168 jam dengan model fisika PLTG. Tiga metode kontrol, skenario yang sama.</p>
+</div>
+</div>
+
+
+<div class="wp-block-group inst-grid is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group inst-panel c-7 reveal is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group inst-head is-layout-flow wp-block-group-is-layout-flow">
+<p class="inst-tag wp-block-paragraph"><b>FIG-02</b><span class="sep">&middot;</span>HASIL &middot; PID+MPC VS PID</p>
+
+
+<p class="status wp-block-paragraph"><span class="led" aria-hidden="true"></span>SIM &middot; SELESAI</p>
+</div>
+
+
+<div class="wp-block-group readouts is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group readout accent is-layout-flow wp-block-group-is-layout-flow">
+<p class="inst-tag wp-block-paragraph">TAG EUE-01</p>
+
+
+<p class="val wp-block-paragraph">-12,5%</p>
+
+
+<p class="lbl wp-block-paragraph">energi tak terlayani vs PID</p>
+
+
+<p class="der wp-block-paragraph">(79,8 &minus; 69,8) / 79,8</p>
+
+
+<div class="wp-block-group bar bar-62 is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+<div class="wp-block-group readout is-layout-flow wp-block-group-is-layout-flow">
+<p class="inst-tag wp-block-paragraph">TAG ZT-101</p>
+
+
+<p class="val wp-block-paragraph">3,4x</p>
+
+
+<p class="lbl wp-block-paragraph">lebih sedikit gerak katup IGV vs PID</p>
+
+
+<p class="der wp-block-paragraph">2270% / 672%</p>
+
+
+<div class="wp-block-group bar bar-78 is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+<div class="wp-block-group readout is-layout-flow wp-block-group-is-layout-flow">
+<p class="inst-tag wp-block-paragraph">TAG HW-00</p>
+
+
+<p class="val wp-block-paragraph">0</p>
+
+
+<p class="lbl wp-block-paragraph">hardware baru. Setpoint ke governor/DCS yang ada.</p>
+
+
+<p class="der wp-block-paragraph">fail-safe &rarr; PID</p>
+
+
+<div class="wp-block-group bar bar-100 is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+</div>
+
+
+<p class="note note-ico wp-block-paragraph">Hasil simulasi, bukan data lapangan. Skenario sama untuk ketiga metode.</p>
+</div>
+
+
+<div class="wp-block-group inst-panel c-5 reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group inst-head is-layout-flow wp-block-group-is-layout-flow">
+<p class="inst-tag wp-block-paragraph"><b>RUN</b><span class="sep">&middot;</span>KONTEKS SIMULASI</p>
+</div>
+
+
+<div class="wp-block-group ctx is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group ctx-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Run</p>
+
+
+<p class="dd wp-block-paragraph">19 Sep 2026</p>
+</div>
+
+
+<div class="wp-block-group ctx-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Lokasi</p>
+
+
+<p class="dd wp-block-paragraph">Cikarang</p>
+</div>
+
+
+<div class="wp-block-group ctx-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Durasi</p>
+
+
+<p class="dd wp-block-paragraph">168 jam</p>
+</div>
+
+
+<div class="wp-block-group ctx-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Model</p>
+
+
+<p class="dd wp-block-paragraph">model fisika PLTG</p>
+</div>
+
+
+<div class="wp-block-group ctx-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Baseline</p>
+
+
+<p class="dd wp-block-paragraph">PID</p>
+</div>
+</div>
+
+
+<p class="note wp-block-paragraph">run 19 Sep 2026, Cikarang, 168 jam, model fisika PLTG, baseline PID</p>
+</div>
+
+
+<div class="wp-block-group inst-panel c-12 reveal is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group inst-head is-layout-flow wp-block-group-is-layout-flow">
+<p class="inst-tag wp-block-paragraph"><b>FIG-03</b><span class="sep">&middot;</span>PERBANDINGAN &middot; 168 JAM</p>
+
+
+<p class="inst-tag wp-block-paragraph">run 19 Sep 2026 &middot; Cikarang</p>
+</div>
+
+
+<figure class="wp-block-table table-scroll"><table><thead><tr><th scope="col">Metrik</th><th scope="col">Konvensional</th><th scope="col">PID</th><th scope="col">PID+MPC</th></tr></thead><tbody><tr><th scope="row">Energi tak terlayani (MWh/minggu)</th><td>106,2</td><td>79,8</td><td>69,8</td></tr><tr><th scope="row">Simpangan frekuensi rms (Hz)</th><td>0,204</td><td>0,079</td><td>0,069</td></tr><tr><th scope="row">Waktu di luar &plusmn;0,2 Hz</th><td>29,4%</td><td>2,2%</td><td>1,2%</td></tr><tr><th scope="row">Gerak katup IGV</th><td>341%</td><td>2270%</td><td>672%</td></tr><tr><th scope="row">Total biaya operasi (per minggu)</th><td>$3,03 jt</td><td>$2,64 jt</td><td>$2,49 jt</td></tr></tbody></table><figcaption class="wp-element-caption">Konvensional, PID, dan PID+MPC pada skenario yang sama. Nilai terbaik per baris ditandai warna sky.</figcaption></figure>
+
+
+<p class="note note-ico wp-block-paragraph">Hasil simulasi, bukan data lapangan. Skenario sama untuk ketiga metode. Kontrol konvensional menggerakkan katup paling sedikit, tetapi dengan simpangan frekuensi dan waktu di luar &plusmn;0,2 Hz yang jauh lebih besar.</p>
+</div>
+</div>
+</div>
+</section>
+
+
+
+<section id="simulator" class="wp-block-group block is-instrument is-layout-flow wp-block-group-is-layout-flow" style="padding-top:0">
+<div class="wp-block-group wrap is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">07</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="sim-title" class="wp-block-heading"><span data-en="Duck Curve Simulator">Duck Curve Simulator</span></h2>
+
+
+<p class="wp-block-paragraph">Ganti mode untuk melihat perbedaan perilaku. Grafik memakai data dummy prosedural dan berlabel ilustrasi.</p>
+</div>
+</div>
+
+
+<div class="inst-grid" id="sim">
+  <!-- Chart panel: procedural dummy data, labelled ILUSTRASI -->
+  <div class="inst-panel c-8 reveal">
+    <div class="inst-head">
+      <span class="inst-tag"><b>FIG-04</b><span class="sep">&middot;</span>DUCK CURVE &middot; 24 JAM</span>
+      <span class="inst-badge big">ilustrasi &middot; data dummy</span>
+    </div>
+    <div class="seg" role="group" aria-label="Mode kontrol">
+      <button type="button" data-mode="pid" aria-pressed="true">PID saja</button>
+      <button type="button" data-mode="mpc" aria-pressed="false">PID + MPC</button>
+    </div>
+    <div class="sim-chart" style="margin-top:16px">
+      <svg viewBox="0 0 640 290" role="img" aria-labelledby="sim-t">
+        <title id="sim-t">Ilustrasi 24 jam dengan data dummy: beban kawasan, produksi PLTS berbentuk lonceng, dan keluaran PLTG sebagai sisa beban. Pada mode PID saja, kurva PLTG mengejar awan dan berosilasi. Pada mode PID + MPC, kurva lebih halus dan naik lebih awal. Area oranye menandai selisih saat PLTG di bawah beban bersih.</title>
+        <g class="gl"><line x1="44" y1="81" x2="624" y2="81"/><line x1="44" y1="138" x2="624" y2="138"/><line x1="44" y1="195" x2="624" y2="195"/></g>
+        <line class="ax" x1="44" y1="252" x2="624" y2="252"/><line class="ax" x1="44" y1="24" x2="44" y2="252"/>
+        <text x="44" y="272" text-anchor="middle">00</text><text x="189" y="272" text-anchor="middle">06</text><text x="334" y="272" text-anchor="middle">12</text><text x="479" y="272" text-anchor="middle">18</text><text x="624" y="272" text-anchor="middle">24</text>
+        <text x="50" y="16">DAYA &middot; SATUAN RELATIF</text>
+        <text class="wm" x="620" y="16" text-anchor="end">ILUSTRASI</text>
+        <path id="sim-sun" class="sun" d=""/>
+        <path id="sim-short" class="short" d=""/>
+        <path id="sim-load" class="load" d=""/>
+        <path id="sim-net" class="net" d=""/>
+        <path id="sim-ghost" class="ghost" d=""/>
+        <path id="sim-pltg" class="pltg" d=""/>
+      </svg>
+      <div class="legend">
+        <span><i style="border-color:var(--sky)"></i>PLTG (mode aktif)</span>
+        <span><i style="border-color:var(--faint)"></i>PLTG (mode lain)</span>
+        <span><i style="border-color:var(--muted);border-top-style:dashed"></i>Beban bersih</span>
+        <span><i style="border-color:var(--text);opacity:.55"></i>Beban kawasan</span>
+        <span><i style="border-color:var(--warn)"></i>PLTS</span>
+        <span><i style="border-color:var(--flame);border-top-width:8px;opacity:.5"></i>Selisih</span>
+      </div>
+    </div>
+  </div>
+  <!-- Side panel: counter (approved values only), cloud slider, console link -->
+  <div class="inst-panel c-4 reveal d1 sim-side">
+    <div class="inst-head"><span class="inst-tag"><b>TAG EUE-01</b></span><span class="status"><span class="led pulse" aria-hidden="true"></span><span id="sim-mode-txt">PID saja</span></span></div>
+    <span class="inst-tag">Energi tak terlayani</span>
+    <div class="counter"><span class="val" id="sim-counter">79,8</span><span class="unit">MWh/minggu</span><div class="delta" id="sim-delta">baseline PID</div></div>
+    <p class="sr-only" id="sim-live" aria-live="polite"></p>
+    <p>Angka ini berasal dari simulasi 168 jam (PID 79,8 &rarr; PID+MPC 69,8), bukan dari grafik. Grafik hanya memperlihatkan perilaku kualitatif.</p>
+    <div class="control">
+      <div class="control-row"><label for="sim-cloud">Tutupan awan</label><output id="sim-cloud-out" for="sim-cloud">40%</output></div>
+      <input id="sim-cloud" type="range" min="0" max="100" step="10" value="40" aria-describedby="sim-cloud-h">
+      <span class="sr-only" id="sim-cloud-h">Mengubah bentuk data dummy pada grafik. Tidak mengubah angka simulasi.</span>
+    </div>
+    <p class="note"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 7v4.5M8 4.6v.4"/></svg>Hasil simulasi, bukan data lapangan. Skenario sama untuk ketiga metode.</p>
+    <!-- "Buka demo console": assets/demo/mpc-901-console-demo.html (~2,7 MB) is NOT referenced anywhere on page load.
+         entropi-simulator.js creates the iframe only on the first click, sandboxed with allow-scripts only
+         (no same-origin, forms, popups, downloads or top navigation). The console shows its own sample-simulation
+         numbers, so the dialog carries a "data simulasi contoh" label. -->
+    <button type="button" class="btn btn-text" id="console-btn" aria-haspopup="dialog" aria-controls="console-dialog" style="margin-top:12px;align-self:flex-start"><span data-en="Open demo console">Buka demo console</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+    <p class="console-note" id="console-note"><span data-en="MPC-901 operator console with sample simulation data, not field data. Loads only when opened.">Console operator MPC-901 dengan data simulasi contoh, bukan data lapangan. Dimuat hanya saat dibuka.</span></p>
+    <dialog class="console-dialog" id="console-dialog" aria-labelledby="console-dialog-title">
+      <div class="console-dialog-head">
+        <h3 id="console-dialog-title"><span data-en="MPC-901 demo console">Demo console MPC-901</span></h3>
+        <span class="console-badge" data-en="Sample simulation data, not field data">Data simulasi contoh, bukan data lapangan</span>
+        <button type="button" class="console-close" id="console-close" aria-label="Tutup demo console" data-en-aria="Close demo console"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14"/></svg></button>
+      </div>
+      <div class="console-frame" id="console-frame"><p class="console-loading" id="console-loading" data-en="Loading console&amp;hellip;">Memuat console&hellip;</p></div>
+    </dialog>
+  </div>
+</div>
+</div>
+</section>
+
+
+
+<div class="wp-block-group horizon is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group horizon-mark is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+
+<section id="use-case" class="wp-block-group block is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap split flip is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split-text is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">08</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="uc-title" class="wp-block-heading"><span data-en="Use case: Cikarang/Bekasi">Use case: Cikarang/Bekasi</span></h2>
+</div>
+</div>
+
+
+<div class="wp-block-group reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group prose is-layout-flow wp-block-group-is-layout-flow">
+<p class="wp-block-paragraph">Pabrik di kawasan industri butuh listrik yang stabil sepanjang hari. PLTS 21 MWp menurunkan kebutuhan gas di siang hari, tetapi setiap awan yang lewat memaksa PLTG GE Frame 9E menutup selisih dalam hitungan menit.</p>
+
+
+<p class="wp-block-paragraph">Skenario Cikarang/Bekasi inilah yang dipakai untuk simulasi 168 jam di bagian Hasil: satu turbin gas, satu PLTS, kontrol eksisting tetap di tempatnya, dan MPC-901 di atasnya sebagai lapisan perencana.</p>
+</div>
+</div>
+</div>
+
+
+<div class="wp-block-group card reveal d2 is-layout-flow wp-block-group-is-layout-flow">
+<p class="label wp-block-paragraph">Spesifikasi skenario</p>
+
+
+<div class="wp-block-group spec is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group spec-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Lokasi</p>
+
+
+<p class="dd wp-block-paragraph">Kawasan industri Cikarang/Bekasi</p>
+</div>
+
+
+<div class="wp-block-group spec-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Pembangkit</p>
+
+
+<p class="dd wp-block-paragraph">PLTG GE Frame 9E</p>
+</div>
+
+
+<div class="wp-block-group spec-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Surya</p>
+
+
+<p class="dd wp-block-paragraph">PLTS 21 MWp</p>
+</div>
+
+
+<div class="wp-block-group spec-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Integrasi</p>
+
+
+<p class="dd wp-block-paragraph">Setpoint ke governor/DCS eksisting, fail-safe ke PID</p>
+</div>
+
+
+<div class="wp-block-group spec-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Skenario uji</p>
+
+
+<p class="dd wp-block-paragraph">168 jam, run 19 Sep 2026, baseline PID</p>
+</div>
+
+
+<div class="wp-block-group spec-row is-layout-flow wp-block-group-is-layout-flow">
+<p class="dt wp-block-paragraph">Status</p>
+
+
+<p class="dd wp-block-paragraph">Studi kasus simulasi, bukan proyek terpasang</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+
+<div class="wp-block-group horizon is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group horizon-mark is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+
+<section id="dampak" class="wp-block-group block is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap split is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split-text is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">09</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="dampak-title" class="wp-block-heading"><span data-en="Business &amp;amp; impact">Bisnis &amp; Dampak</span></h2>
+</div>
+</div>
+
+
+<div class="wp-block-group prose reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<p class="impact-text wp-block-paragraph">Transisi energi di kawasan industri tidak menunggu pembangkit gas pensiun. PLTS dipasang berdampingan dengan PLTG yang sudah ada, dan turbinlah yang menutup selisih saat awan lewat. Lapisan kontrol yang membaca cuaca membuat kombinasi ini lebih stabil, tanpa investasi hardware baru.</p>
+</div>
+
+
+<div class="wp-block-group reveal d2 is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group biz is-layout-flow wp-block-group-is-layout-flow">
+<p class="label wp-block-paragraph"><!-- Business model: exactly one sentence, verbatim from site-spec.json approvedData.businessModel. No numbers. -->Model bisnis</p>
+
+
+<p class="wp-block-paragraph">Dimulai dari studi kelayakan dan pilot advisory, di mana operator tetap memegang kendali, lalu berlanjut ke langganan SaaS dengan performance fee berdasarkan hasil terukur.</p>
+</div>
+</div>
+</div>
+
+
+<div class="wp-block-group sdg-stack is-layout-flow wp-block-group-is-layout-flow">
+<article class="wp-block-group card sdg reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sdg-no wp-block-paragraph"><small>SDG</small>7</p>
+
+
+<h3 class="wp-block-heading">Energi bersih dan terjangkau</h3>
+
+
+<p class="wp-block-paragraph">Membantu PLTS terpakai lebih penuh di samping pembangkit gas, alih-alih dipangkas saat beban bersih bergejolak.</p>
+</article>
+
+
+<article class="wp-block-group card sdg reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<p class="sdg-no wp-block-paragraph"><small>SDG</small>9</p>
+
+
+<h3 class="wp-block-heading">Industri, inovasi, infrastruktur</h3>
+
+
+<p class="wp-block-paragraph">Meningkatkan pembangkit yang sudah ada lewat perangkat lunak, tanpa mengganti hardware.</p>
+</article>
+
+
+<article class="wp-block-group card sdg reveal d2 is-layout-flow wp-block-group-is-layout-flow">
+<p class="sdg-no wp-block-paragraph"><small>SDG</small>13</p>
+
+
+<h3 class="wp-block-heading">Penanganan perubahan iklim</h3>
+
+
+<p class="wp-block-paragraph">Membuat integrasi energi terbarukan di kawasan industri lebih mudah diterima oleh operator.</p>
+</article>
+</div>
+</div>
+</section>
+
+
+
+<div class="wp-block-group horizon is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group horizon-mark is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+
+<section id="roadmap" class="wp-block-group block is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap split flip is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split-text is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">10</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="rm-title" class="wp-block-heading"><span data-en="Roadmap">Roadmap</span></h2>
+
+
+<p class="wp-block-paragraph">Dari simulator ke lapangan, satu langkah terukur setiap tahap.</p>
+</div>
+</div>
+</div>
+
+
+<div class="wp-block-group card timeline-card reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<ol class="wp-block-list timeline">
+<li><span class="when">Sekarang</span><span class="what">MVP simulator fisika</span></li>
+
+
+<li><span class="when">0&ndash;3 bln</span><span class="what">LoI pertama dari operator</span></li>
+
+
+<li><span class="when">3&ndash;6 bln</span><span class="what">Studi kelayakan berbayar</span></li>
+
+
+<li><span class="when">6&ndash;12 bln</span><span class="what">Pilot lapangan (advisory)</span></li>
+
+
+<li><span class="when">12 bln+</span><span class="what">Konversi langganan &amp; replikasi</span></li>
+</ol>
+</div>
+</div>
+</section>
+
+
+
+<div class="wp-block-group horizon is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group horizon-mark is-layout-flow wp-block-group-is-layout-flow"></div>
+</div>
+
+
+
+<section id="kontak" class="wp-block-group block is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group wrap split is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group split-text is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group sec-head reveal is-layout-flow wp-block-group-is-layout-flow">
+<p class="sec-no wp-block-paragraph">11</p>
+
+
+<div class="wp-block-group is-layout-flow wp-block-group-is-layout-flow">
+<h2 id="kontak-title" class="wp-block-heading"><span data-en="See MPC-901 on your plant's scenario">Lihat MPC-901 pada skenario pembangkit Anda</span></h2>
+
+
+<p class="wp-block-paragraph"><span data-en="Tell us about your gas turbine and solar setup. We will walk you through the simulator and discuss whether a feasibility study makes sense.">Ceritakan konfigurasi PLTG dan PLTS Anda. Kami tunjukkan simulatornya dan membahas apakah studi kelayakan masuk akal.</span></p>
+</div>
+</div>
+
+
+<div class="wp-block-group contact-lines reveal d1 is-layout-flow wp-block-group-is-layout-flow">
+<p class="wp-block-paragraph"><b>Email</b><a class="link" href="mailto:entropi.eng@gmail.com">entropi.eng@gmail.com</a></p>
+
+
+<p class="wp-block-paragraph"><b>Instagram</b><a class="link" href="https://www.instagram.com/entropi.eng/" rel="noopener" target="_blank">@entropi.eng</a></p>
+
+
+<p class="wp-block-paragraph"><b>Kompetisi</b>Pertamuda 2026</p>
+</div>
+</div>
+
+
+<div class="wp-block-group card reveal d2 is-layout-flow wp-block-group-is-layout-flow">
+<!-- Contact form: client-side validation; submit builds a mailto to entropi.eng@gmail.com (handler placeholder until Formspree or similar, see assets/js/entropi-form.js). -->
+<form id="contact-form" class="form-grid" novalidate aria-describedby="form-status">
+  <div class="field"><label for="f-nama"><span data-en="Name">Nama</span> <span class="req">(wajib)</span></label><input id="f-nama" name="nama" type="text" autocomplete="name" required placeholder="Nama lengkap" data-en-ph="Full name" aria-describedby="f-nama-h"><span class="help" id="f-nama-h">Sesuai kartu nama.</span></div>
+  <div class="field"><label for="f-perusahaan"><span data-en="Company">Perusahaan</span> <span class="req">(wajib)</span></label><input id="f-perusahaan" name="perusahaan" type="text" autocomplete="organization" required placeholder="Perusahaan atau institusi" data-en-ph="Company or institution" aria-describedby="f-perusahaan-h"><span class="help" id="f-perusahaan-h">Operator, kawasan industri, atau institusi.</span></div>
+  <div class="field full"><label for="f-email"><span data-en="Work email">Email</span> <span class="req">(wajib)</span></label><input id="f-email" name="email" type="email" autocomplete="email" required placeholder="nama@perusahaan.co.id" aria-describedby="f-email-h"><span class="help" id="f-email-h">Kami membalas ke alamat ini.</span></div>
+  <div class="field full"><label for="f-pesan"><span data-en="Message">Pesan</span> <span class="req">(wajib)</span></label><textarea id="f-pesan" name="pesan" required placeholder="Ceritakan konfigurasi PLTG dan PLTS Anda" data-en-ph="Tell us about your gas turbine and solar setup" aria-describedby="f-pesan-h"></textarea><span class="help" id="f-pesan-h">Minimal 10 karakter.</span></div>
+  <div class="full"><button class="btn btn-primary" type="submit"><span data-en="Request a Demo">Minta Demo</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><p class="form-status" id="form-status" role="status" aria-live="polite"></p></div>
+</form>
+</div>
+</div>
+</section>
+
+</div></main>
+
+
+<footer class="site-footer wp-block-template-part">
+<div class="wp-block-group wrap is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group foot-grid is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-group foot-brand is-layout-flow wp-block-group-is-layout-flow">
+<figure class="wp-block-image size-full foot-logo"><img decoding="async" src="wp-content/themes/entropi/assets/images/entropi-logo-white.png" alt="Entropi Energy Solutions"/></figure>
+
+
+<p class="wp-block-paragraph">MPC-901: lapisan kontrol prediktif untuk PLTG yang berpasangan dengan PLTS. Hanya mengirim setpoint, tanpa hardware baru, fail-safe ke PID.</p>
+</div>
+
+
+<div class="wp-block-group foot-col is-layout-flow wp-block-group-is-layout-flow">
+<h2 class="wp-block-heading">Navigasi</h2>
+
+
+<ul class="wp-block-list">
+<li><a href="#solusi">Solusi</a></li>
+
+
+<li><a href="#hasil">Hasil &amp; Validasi</a></li>
+
+
+<li><a href="#simulator">Duck Curve Simulator</a></li>
+
+
+<li><a href="#kontak"><span data-en="Request a Demo">Minta Demo</span></a></li>
+</ul>
+</div>
+
+
+<div class="wp-block-group foot-col is-layout-flow wp-block-group-is-layout-flow">
+<h2 class="wp-block-heading">Kontak</h2>
+
+
+<ul class="wp-block-list">
+<li><a href="https://www.instagram.com/entropi.eng/" rel="noopener" target="_blank">@entropi.eng</a></li>
+
+
+<li><a href="mailto:entropi.eng@gmail.com">entropi.eng@gmail.com</a></li>
+
+
+<li>Pertamuda 2026</li>
+</ul>
+</div>
+</div>
+
+
+<div class="wp-block-group legal is-layout-flow wp-block-group-is-layout-flow">
+<p class="wp-block-paragraph">&copy; 2026 Entropi &middot; Pertamuda 2026</p>
+
+
+<p class="wp-block-paragraph">Mendukung SDG 7 &middot; SDG 9 &middot; SDG 13</p>
+
+
+<p class="wp-block-paragraph">Nature prefers chaos. We prefer control.</p>
+</div>
+</div>
+
+</footer>
+</div>
+</body>
+</html>
