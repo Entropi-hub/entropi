@@ -1,9 +1,10 @@
 /* =====================================================================
-   ENTROPI · DUCK CURVE SIMULATOR (ported verbatim from the approved homepage script, part 5)
-   Markup lives in a core/html block (#sim) in pages/homepage.html.
-   Counter flips between the two approved values only (79,8 <-> 69,8 MWh/minggu);
-   no count-up, no interpolated numbers (site-spec.json decisions.numberAnimation).
-   Loaded with defer on the front end only.
+   ENTROPI · DUCK CURVE SIMULATOR (Demo page only, defer)
+   Procedural dummy data, labelled ILLUSTRATION. 96 samples (15 min). Load = industrial day profile.
+   Solar = bell with cloud dips scaled by the cloud slider. Gas turbine = residual (load - solar).
+   PID only: lagged with a derivative kick, so it overshoots and chases clouds.
+   PID + MPC: forward-looking window + small reserve, so it ramps earlier and moves less.
+   v3: no result numbers anywhere (REVISI-V3 5.4) and no embedded console (5.3).
    ===================================================================== */
 (function(){
   'use strict';
@@ -11,22 +12,17 @@
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   function $(s,c){return (c||doc).querySelector(s)}
   function $$(s,c){return Array.prototype.slice.call((c||doc).querySelectorAll(s))}
-  function fmt(v,dec){return v.toFixed(dec).replace('.',',')}
 
-  /* ---------- 5. Duck Curve Simulator (procedural dummy data, ILUSTRASI) ----------
-     96 samples (15 min). Load = industrial day profile. PLTS = bell with
-     cloud dips scaled by the cloud slider. PLTG = residual (load - PLTS).
-     PID mode: lagged, derivative kick, so it overshoots and chases clouds.
-     MPC mode: forward-looking window + small reserve, so it ramps earlier
-     and moves less. The counter only ever shows the approved simulation
-     values 79,8 (PID) and 69,8 (PID+MPC) MWh/minggu. */
   var sim=$('#sim');
   if(sim){
     var N=96, X0=44, X1=624, Y0=252, Y1=24, VMAX=.85;
     var pLoad=$('#sim-load'), pSun=$('#sim-sun'), pNet=$('#sim-net'), pShort=$('#sim-short'), pLine=$('#sim-pltg'), pGhost=$('#sim-ghost');
-    var cloud=$('#sim-cloud'), cloudOut=$('#sim-cloud-out'), counter=$('#sim-counter'), delta=$('#sim-delta'), modeTxt=$('#sim-mode-txt');
+    var cloud=$('#sim-cloud'), cloudOut=$('#sim-cloud-out'), modeTxt=$('#sim-mode-txt'), desc=$('#sim-desc'), live=$('#sim-live');
     var modeBtns=$$('[data-mode]', sim), mode='pid', data=null, shown=null, anim=null;
-    var VALUES={pid:79.8, mpc:69.8}, curVal=VALUES.pid;
+    var TEXT={
+      pid:{name:'PID only',desc:'The governor reacts after the net load has already moved, so the gas turbine chases every passing cloud and overshoots.'},
+      mpc:{name:'PID + MPC',desc:'Setpoints are planned ahead from the forecast, so the gas turbine ramps earlier, moves less and stays closer to the net load.'}
+    };
     function rnd(seed){ var s=seed; return function(){ s=(s*16807)%2147483647; return (s-1)/2147483646; }; }
     function gen(c){
       var r=rnd(7), load=[], sun=[], net=[], i, t, dips=[[9.6,.35,.55],[10.9,.25,.7],[12.4,.45,.8],[13.6,.3,.6],[15.1,.35,.65],[16.2,.2,.5]];
@@ -70,53 +66,16 @@
         shown=from.map(function(v,i){return v+(target[i]-v)*e}); paint(shown); if(p<1) anim=requestAnimationFrame(step); }
       anim=requestAnimationFrame(step);
     }
-    /* Flip straight between the two approved values only (79,8 / 69,8 MWh/minggu).
-       No count-up and no interpolation: the old value fades out, the new FINAL value
-       is written in one step, then fades back in (decisions.numberAnimation). */
-    function flipCounter(to){
-      curVal=to;
-      if(reduce){ counter.textContent=fmt(to,1); return; }
-      counter.classList.add('swap');
-      setTimeout(function(){ counter.textContent=fmt(to,1); counter.classList.remove('swap'); },220);
-    }
     function setMode(m){
       mode=m;
       modeBtns.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.mode===m))});
-      flipCounter(VALUES[m]);
-      delta.textContent = m==='mpc' ? '-12,5% vs PID saja' : 'baseline PID';
-      if(modeTxt) modeTxt.textContent = m==='mpc' ? 'PID + MPC' : 'PID saja';
-      var live=$('#sim-live'); if(live) live.textContent='Mode '+(m==='mpc'?'PID + MPC':'PID saja')+'. Energi tak terlayani '+fmt(VALUES[m],1)+' MWh per minggu, hasil simulasi.';
+      modeTxt.textContent=TEXT[m].name;
+      desc.textContent=TEXT[m].desc;
+      if(live) live.textContent='Mode '+TEXT[m].name+'. '+TEXT[m].desc;
       render(true);
     }
     modeBtns.forEach(function(b){b.addEventListener('click',function(){ if(b.dataset.mode!==mode) setMode(b.dataset.mode); })});
     if(cloud){ cloud.addEventListener('input',function(){ cloudOut.textContent=cloud.value+'%'; data=gen(cloud.value/100); render(true); }); }
     data=gen(cloud?cloud.value/100:.4); render(false);
-    /* "Buka demo console": the ~2,7 MB console is never requested on page load.
-       The iframe is created on the first click only, then reused. Sandbox = allow-scripts
-       only: opaque origin, no forms, popups, downloads or top-level navigation.
-       The console runs in its offline demo mode (live mode needs a ?t= token, never passed). */
-    var cBtn=$('#console-btn'), dlg=$('#console-dialog'), cFrame=$('#console-frame'), cClose=$('#console-close');
-    if(cBtn&&dlg&&cFrame){
-      var CONSOLE_SRC='wp-content/themes/entropi/assets/demo/mpc-901-console-demo.html' /* relative for the static export */;
-      var loaded=false;
-      function openConsole(){
-        if(!loaded){
-          var f=doc.createElement('iframe');
-          f.src=CONSOLE_SRC;
-          f.title='Demo console MPC-901 (data simulasi contoh)';
-          f.setAttribute('sandbox','allow-scripts');
-          f.setAttribute('referrerpolicy','no-referrer');
-          f.addEventListener('load',function(){ var l=$('#console-loading'); if(l) l.remove(); });
-          cFrame.appendChild(f);
-          loaded=true;
-        }
-        if(typeof dlg.showModal==='function') dlg.showModal(); else dlg.setAttribute('open','');
-      }
-      function closeConsole(){ if(typeof dlg.close==='function') dlg.close(); else dlg.removeAttribute('open'); }
-      cBtn.addEventListener('click',openConsole);
-      if(cClose) cClose.addEventListener('click',closeConsole);
-      dlg.addEventListener('click',function(e){ if(e.target===dlg) closeConsole(); }); /* click on backdrop */
-      dlg.addEventListener('close',function(){ cBtn.focus(); });
-    }
   }
 })();
